@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+
+    <p>flip coin:</p>
+    <button onclick="
+      flipCoin();
+    ">flip</button>
+
+    <p>guess</p>
+    <button onclick="
+      compare('heads', result);
+      result=''; //clear result
+      guess='';
+    ">heads</button>
+
+    <button onclick="
+      compare('tails', result);
+      result=''; //clear result
+    ">tails</button>
+
+    <br>
+    <br>
+
+    <button onclick="
+      score.losses=0;
+      score.wins=0;
+      localStorage.removeItem('scoreString'); //removes score from local storage
+      alert('score has been reset');
+    ">reset</button>
+
+    <br>
+
+    <button onclick="
+      printScore();
+    ">show score</button>
+
+    <script>
+      //retreive string and turn back into an object
+      let score = JSON.parse(localStorage.getItem('scoreString'));
+      console.log(score);
+
+      let result = ''; //random head or tail
+      let message = ''; //correct or incorrect
+
+      //give score default scores if null
+      if(score === null){ //!score is equvilent
+        score ={
+          wins:0,
+          losses:0,
+          ties:0
+        };
+      }
+
+  
+      //print message and score
+      function popup(){
+        alert(`${message}\nwins: ${score.wins}   losses: ${score.losses}`);
+      }
+
+      //print score only
+      function printScore(){
+        alert(`wins: ${score.wins}   losses: ${score.losses}`);
+      }
+
+      //flips coin and saves it in result
+      function flipCoin(){
+        const randNum = Math.random();
+
+        if(randNum < 0.5){
+        result='heads';
+        }else{
+        result='tails';
+        }
+
+        console.log(result);
+      }
+
+      //compares guess with result
+      function compare(guess, result){
+        if(result===''|| result===null){
+          alert('pls flip coin');
+          return;
+        }else if(guess === result){
+          message='CORRECT';
+          score.wins++;
+        }else{
+          message='INCORRECT';
+          score.losses++;
+        }
+        popup();
+
+        //turn score object into string and set in storage
+        localStorage.setItem('scoreString', JSON.stringify(score));
+      }
+
+    </script>
+  </body>
+</html>
